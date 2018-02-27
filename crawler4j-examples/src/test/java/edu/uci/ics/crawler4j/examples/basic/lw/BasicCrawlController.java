@@ -15,16 +15,15 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.examples.basic;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package edu.uci.ics.crawler4j.examples.basic.lw;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yasser Ganjisaffar
@@ -112,14 +111,13 @@ public class BasicCrawlController {
      * URLs that are fetched and then the crawler starts following links
      * which are found in these pages
      */
-        controller.addSeed("http://www.ics.uci.edu/");
-        controller.addSeed("http://www.ics.uci.edu/~lopes/");
-        controller.addSeed("http://www.ics.uci.edu/~welling/");
+        controller.addSeed("http://www.91ud.com/category/2.html");
+        controller.addSeed("http://www.91ud.com/category/3.html");
 
     /*
      * Start the crawl. This is a blocking operation, meaning that your code
      * will reach the line after this only when crawling is finished.
      */
-        controller.start(BasicCrawler.class, numberOfCrawlers);
+        controller.start(udBasicCrawler.class, numberOfCrawlers);
     }
 }
