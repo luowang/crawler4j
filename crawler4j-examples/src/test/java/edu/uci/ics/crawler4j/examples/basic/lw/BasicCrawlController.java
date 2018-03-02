@@ -111,8 +111,10 @@ public class BasicCrawlController {
      * URLs that are fetched and then the crawler starts following links
      * which are found in these pages
      */
-        controller.addSeed("http://www.91ud.com/category/2.html");
-        controller.addSeed("http://www.91ud.com/category/3.html");
+        controller.addSeed("http://www.91ud.com");
+        for(int i=0;i<=15;i++){
+            controller.addSeed("http://www.91ud.com/category/"+i+".html");
+        }
 
     /*
      * Start the crawl. This is a blocking operation, meaning that your code
