@@ -15,14 +15,12 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.examples.basic.lw;
+package edu.uci.ics.crawler4j.examples.basic.wechartCloud;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
-import org.apache.http.Header;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -32,18 +30,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
  * @author Yasser Ganjisaffar
  */
-public class udBasicCrawler extends WebCrawler {
+public class BasicCrawler extends WebCrawler {
 
     private static final Pattern IMAGE_EXTENSIONS = Pattern.compile(".*\\.(bmp|gif|jpg|png)$");
 
@@ -55,12 +50,13 @@ public class udBasicCrawler extends WebCrawler {
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
         // Ignore the url if it has an extension that matches our defined set of image extensions.
-        if (IMAGE_EXTENSIONS.matcher(href).matches()|| !href.startsWith("http://www.91ud.com/app")) {
+        if (IMAGE_EXTENSIONS.matcher(href).matches()|| !href.startsWith("http://www.xcxzjia.com/shop/app")
+            ) {
             return false;
         }
 
         // Only accept the url if it is in the "www.ics.uci.edu" domain and protocol is "http".
-        return href.startsWith("http://www.91ud.com/");
+        return href.startsWith("http://www.xcxzjia.com/");
     }
 
     /**
@@ -71,57 +67,57 @@ public class udBasicCrawler extends WebCrawler {
     public void visit(Page page) {
         final String url = page.getWebURL().getURL();
         logger.debug("-----------爬取路径：" + url);
-
+        String domain = "http://www.xcxzjia.com";
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String html = htmlParseData.getHtml();
             final Document doc = Jsoup.parse(html);
             ArrayList<String> strings = new ArrayList<>();
-            Element element1 = doc.select("div[class=intro clearfix]").first();
             // 图片logo地址
-            String imgStr = element1.select("img[class=avatar]").first().attr("src");
-            strings.add(imgStr);
+            String imgStr = doc.select("div[class=img fl]").first().select("img").first().attr("src");
+            strings.add(domain +imgStr);
             // 名字
-            String nameStr = element1.select("div[class=name]").first().select("h1").first().text();
+            String nameStr = doc.select("h3[class=fl]").first().text();
             strings.add(nameStr);
-            // 标签
+            // 分类
             StringBuffer sb = new StringBuffer();
-            Elements tagsElements = element1.select("div[class=tags]").first().select("a");
-            for(Element element:tagsElements){
-                String text1 = element.text();
-                sb.append(text1).append(";");
+            Elements tagsElements = doc.select("div[class=dataList fl]").select("p");
+                Elements label1 = tagsElements.get(1).select("label");
+            for(int i=0;i<label1.size();i++){
+                String tag1 = label1.get(i).select("a").text();
+                sb.append(tag1).append(";");
             }
-            String tagStr = sb.toString();
-            strings.add(tagStr);
+            strings.add(sb.toString());
+            StringBuffer sb2 = new StringBuffer();
+            // 标签
+                Elements label2 = tagsElements.get(2).select("span");
+            for(int i=0;i<label2.size();i++){
+                String tag1 = label2.get(i).select("a").text();
+                sb2.append(tag1).append(";");
+            }
+                strings.add(sb2.toString());
             // 二维码地址
-            String qrcodeStr = doc.select("div[class=qrcode]").first().select("img").first().attr("src");
-            strings.add(qrcodeStr);
-            Elements lis = doc.select("ul[class=info]").first().select("li");
-                Elements spans = lis.get(0).select("span");
-                    // 分类
-                    String categoryStr=spans.get(0).select("strong").first().select("a").text();
-                    strings.add(categoryStr);
-                    // 上传时间
-                    String uploadTime=spans.get(1).select("strong").first().text();
-                     strings.add(uploadTime);
-                Elements spans1 = lis.get(1).select("span");
-                    // 作者
-                    String authorStr= spans1.get(0).select("strong").first().text();
+            String qrcodeStr = doc.select("div[class=lite-code fr]").first().select("img").first().attr("src");
+            strings.add(domain+qrcodeStr);
+            // 上传时间
+            String uploadTime = doc.select("div[class=lite-text fl]").first().select("div[class=fl]").get(1).select("p").get(1).text();
+            strings.add(uploadTime);
+            // 作者
+            String authorStr = doc.select("div[class=lite-text fl]").first().select("div[class=fl]").get(1).select("p").get(0).text();
             strings.add(authorStr);
-                    // 查看要求
-                    String reqStr=spans1.get(1).select("strong").first().text();
+            // 查看要求
+            String reqStr = doc.select("div[class=lite-text fl]").first().select("div[class=fl]").get(1).select("p").get(2).text();
             strings.add(reqStr);
             // 截图
-            StringBuffer sb2 = new StringBuffer();
-            Elements lis2 = doc.select("div[class=screenshot]").first().select("ul[class=screenshot-list clearfix]").first().select("li");
+            StringBuffer sb3 = new StringBuffer();
+            Elements lis2 = doc.select("ul[class=imgsroll clear]").select("li");
             for(Element element:lis2){
-                String href = element.select("a").attr("href");
-                sb2.append(href).append(";");
+                String href = element.select("img").attr("src");
+                sb3.append(domain+href).append(";");
             }
-            String screenStr=sb2.toString();
-            strings.add(screenStr);
+            strings.add(sb3.toString());
             // 简介
-            String introductStr = doc.select("div[class=description marked]").first().select("p").text();
+            String introductStr = doc.select("div[class=detaltext]").select("p").get(7).text();
             strings.add(introductStr);
             // 来源
             String sourceUrl = page.getWebURL().getURL();
@@ -131,7 +127,7 @@ public class udBasicCrawler extends WebCrawler {
             //写excel文件
 
             String[] title = strings.toArray(new String[strings.size()]);
-            createExcel("E:\\data\\crawl\\xcx\\91ud2.xls","xcx_data",title);
+            createExcel("E:\\data\\crawl\\xcx\\xcxzjia2.xls","xcx_data",title);
         }
         logger.debug("=============");
     }

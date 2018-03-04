@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.examples.basic.lw;
+package edu.uci.ics.crawler4j.examples.basic.wechartCloud;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -32,7 +32,7 @@ public class BasicCrawlController {
     private static final Logger logger = LoggerFactory.getLogger(BasicCrawlController.class);
 
     public static void main(String[] args) throws Exception {
-        args=new String[]{"E:\\data\\crawl","4"};
+        args=new String[]{"E:\\data\\crawl","1"};
         if (args.length != 2) {
             logger.info("Needed parameters: ");
             logger.info("\t rootFolder (it will contain intermediate crawl data)");
@@ -72,7 +72,7 @@ public class BasicCrawlController {
      * You can set the maximum number of pages to crawl. The default value
      * is -1 for unlimited number of pages
      */
-        config.setMaxPagesToFetch(100000);
+        config.setMaxPagesToFetch(1000);
 
         /**
          * Do you want crawler4j to crawl also binary data ?
@@ -111,15 +111,12 @@ public class BasicCrawlController {
      * URLs that are fetched and then the crawler starts following links
      * which are found in these pages
      */
-        controller.addSeed("http://www.91ud.com");
-        for(int i=0;i<=15;i++){
-            controller.addSeed("http://www.91ud.com/category/"+i+".html");
-        }
-
+        controller.addSeed("http://www.xcxzjia.com/shop/app");
+//        controller.addSeed("http://www.xcxzjia.com/shop/App");
     /*
      * Start the crawl. This is a blocking operation, meaning that your code
      * will reach the line after this only when crawling is finished.
      */
-        controller.start(udBasicCrawler.class, numberOfCrawlers);
+        controller.start(BasicCrawler.class, numberOfCrawlers);
     }
 }

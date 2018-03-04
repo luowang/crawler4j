@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.examples.basic.lw;
+package edu.uci.ics.crawler4j.examples.basic.xcxzjia;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -66,7 +66,7 @@ public class BasicCrawlController {
      * You can set the maximum crawl depth here. The default value is -1 for
      * unlimited depth
      */
-        config.setMaxDepthOfCrawling(2);
+        config.setMaxDepthOfCrawling(1);
 
     /*
      * You can set the maximum number of pages to crawl. The default value
@@ -111,15 +111,16 @@ public class BasicCrawlController {
      * URLs that are fetched and then the crawler starts following links
      * which are found in these pages
      */
-        controller.addSeed("http://www.91ud.com");
-        for(int i=0;i<=15;i++){
-            controller.addSeed("http://www.91ud.com/category/"+i+".html");
-        }
+    for(int i=0;i<3000;i++){
+        controller.addSeed("http://www.xcxzjia.com/shop/app/"+i);
 
+    }
+//        controller.addSeed("http://www.xcxzjia.com/shop/app");
+//        controller.addSeed("http://www.xcxzjia.com/shop/App");
     /*
      * Start the crawl. This is a blocking operation, meaning that your code
      * will reach the line after this only when crawling is finished.
      */
-        controller.start(udBasicCrawler.class, numberOfCrawlers);
+        controller.start(BasicCrawler.class, numberOfCrawlers);
     }
 }
